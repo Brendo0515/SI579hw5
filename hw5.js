@@ -19,30 +19,28 @@ async function getRhymes(){
     }
     else{
         document.getElementById("word_output").value = "";
-        for (x of data) {
-            const newListElement = document.createElement('li');
-            newListElement.textContent = x.word;
-            let w = x.word;
-            const doneButtonElement = document.createElement('button');
-            doneButtonElement.id = "btn" + x.word;
-            doneButtonElement.textContent = "(save)";
-            newListElement.append(doneButtonElement);
-            document.getElementById("word_output").appendChild(newListElement);
-            document.getElementById("btn" + x.word).addEventListener("click", function saveWord (){
-                savedwordList.push(w);
-                document.getElementById("saved_words").innerHTML = ""
-                document.getElementById("saved_words").innerHTML = savedwordList.join(', '); 
-            });
+        let syllableArray = groupBy(data, "numSyllables");
+        for (syl of Object.keys(syllableArray)) {
+            const newH2Element = document.createElement('h2');
+            newH2Element.textContent = syl + " syllable:";
+            document.getElementById("word_output").appendChild(newH2Element);
+            for (x in syllableArray[syl]) {
+                const newListElement = document.createElement('li');
+                newListElement.textContent = syllableArray[syl][x].word;
+                let w = syllableArray[syl][x].word;
+                const doneButtonElement = document.createElement('button');
+                doneButtonElement.id = "btn" + w;
+                doneButtonElement.textContent = "(save)";
+                newListElement.append(doneButtonElement);
+                document.getElementById("word_output").appendChild(newListElement);
+                document.getElementById("btn" + w).addEventListener("click", function saveWord (){
+                    savedwordList.push(w);
+                    document.getElementById("saved_words").innerHTML = "";
+                    document.getElementById("saved_words").innerHTML = savedwordList.join(', '); 
+                });
+            }
         }
     }
- //   let query = document.getElementById("word_input").value;
- //   fetch("https://api.datamuse.com/words?sl="+query).then((response) => {
- //       return response.text();
- //   }).then((result) => {
- //       document.getElementById("word_output").value = result;
- //   });
- //   document.getElementById("word_output").value = "...loading";
- //   document.getElementById("output_description").innerHTML = "Words that rhyme with " + query + ":";
 }
 
 async function getSynonyms(){
@@ -61,25 +59,17 @@ async function getSynonyms(){
             newListElement.textContent = x.word;
             let w = x.word;
             const doneButtonElement = document.createElement('button');
-            doneButtonElement.id = "btn" + x.word;
+            doneButtonElement.id = "btn" + w;
             doneButtonElement.textContent = "(save)";
             newListElement.append(doneButtonElement);
             document.getElementById("word_output").appendChild(newListElement);
-            document.getElementById("btn" + x.word).addEventListener("click", function saveWord (){
+            document.getElementById("btn" + w).addEventListener("click", function saveWord (){
                 savedwordList.push(w);
                 document.getElementById("saved_words").innerHTML = "";
                 document.getElementById("saved_words").innerHTML = savedwordList.join(', '); 
             });
         }
     }
-//    let query = document.getElementById("word_input").value;
-//    fetch("https://api.datamuse.com/words?ml="+query).then((response) => {
-//        return response.text();
-//    }).then((result) => {
-//        document.getElementById("word_output").value = result;
-//    });
-//    document.getElementById("word_output").value = "...loading";
-//    document.getElementById("output_description").innerHTML = "Words with a similar meaning to " + query + ":";
 }
 
 /**
